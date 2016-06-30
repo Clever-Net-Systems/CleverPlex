@@ -16,6 +16,7 @@ from ovirtsdk.xml import params
 from paramiko import SSHClient
 from scp import SCPClient
 
+VERSION = params.Version()
 def init():
     configuration_file_path = "/etc/ovirt_admin/settings.conf"
     settings = ConfigParser.ConfigParser()
@@ -30,7 +31,7 @@ def init():
 
 # DATACENTERS ------------------------------------------------------------------
 def create_datacenter(datacentername, storagetype):
-    display_title("Creating a new datacenter "+str(datacentername))
+    display_title("Creating a new data center "+str(datacentername))
     try:
         print '\t[~] Creating datacenter...'
         if api.datacenters.add(params.DataCenter(name=datacentername, storage_type=storagetype, version=VERSION)):
@@ -40,7 +41,7 @@ def create_datacenter(datacentername, storagetype):
         print  "\t "+str(e)
 
 def destroy_datacenter(datacentername):
-    display_title("Destroying datacenter "+str(datacentername))
+    display_title("Destroying data center "+str(datacentername))
     try:
         print '\t[~] Destroying datacenter...'
         dtcenter = api.datacenters.get(name=datacentername)
@@ -337,41 +338,41 @@ def handle_args():
     # ------
     new_datacenter_parser = subparsers.add_parser('ndc', help='Create an oVirt DataCenter')
     new_datacenter_parser.set_defaults(which='ndc')
-    new_datacenter_parser.add_argument('dataCenterName', help='oVirt DataCenter\'s name')
+    new_datacenter_parser.add_argument('data_center_name', help='oVirt DataCenter\'s name')
     new_datacenter_parser.add_argument('storage_type', help='oVirt DataCenter\'s storage type (iscsi, fcp, nfs, localfs, posixfs, glusterfs, glance, cinder)')
     # ------
     destroy_datacenter_parser = subparsers.add_parser('deldc', help='Destroy an oVirt DataCenter')
     destroy_datacenter_parser.set_defaults(which='deldc')
-    destroy_datacenter_parser.add_argument('dataCenterName', help='oVirt DataCenter\'s name')
+    destroy_datacenter_parser.add_argument('data_center_name', help='oVirt DataCenter\'s name')
     # ------
     new_cluster_parser = subparsers.add_parser('ncluster', help='Create an oVirt cluster')
     new_cluster_parser.set_defaults(which='ncluster')
-    new_cluster_parser.add_argument('clustername', help='oVirt cluster\'s name')
-    new_cluster_parser.add_argument('datacentername', help='oVirt cluster\'s datacenter name')
-    new_cluster_parser.add_argument('cputype', help='oVirt cluster\'s cpu type ("Intel Penryn Family", "Intel Conroe Family", ...)')
+    new_cluster_parser.add_argument('cluster_name', help='oVirt cluster\'s name')
+    new_cluster_parser.add_argument('data_center_name', help='oVirt cluster\'s datacenter name')
+    new_cluster_parser.add_argument('cpu_type', help='oVirt cluster\'s cpu type ("Intel Penryn Family", "Intel Conroe Family", ...)')
     # ------
     destroy_cluster_parser = subparsers.add_parser('delcluster', help='Destroy an oVirt cluster')
     destroy_cluster_parser.set_defaults(which='delcluster')
-    destroy_cluster_parser.add_argument('clustername', help='oVirt cluster\'s name')
+    destroy_cluster_parser.add_argument('cluster_name', help='oVirt cluster\'s name')
     # ------
     new_host_parser = subparsers.add_parser('nhost', help='Create an oVirt Host')
     new_host_parser.set_defaults(which='nhost')
-    new_host_parser.add_argument('hostname', help='oVirt Host\'s name')
-    new_host_parser.add_argument('hostaddr', help='oVirt Host\'s ip addr')
-    new_host_parser.add_argument('clustername', help='oVirt Host\'s cluster name')
-    new_host_parser.add_argument('rootpwd', help='oVirt Host\'s root password')
+    new_host_parser.add_argument('host_name', help='oVirt Host\'s name')
+    new_host_parser.add_argument('host_addr', help='oVirt Host\'s ip addr')
+    new_host_parser.add_argument('cluster_name', help='oVirt Host\'s cluster name')
+    new_host_parser.add_argument('root_pwd', help='oVirt Host\'s root password')
     # ------
     activate_host_parser = subparsers.add_parser('uphost', help='Activate an oVirt Host')
     activate_host_parser.set_defaults(which='uphost')
-    activate_host_parser.add_argument('hostname', help='oVirt Host\'s name')
+    activate_host_parser.add_argument('host_name', help='oVirt Host\'s name')
     # ------
     deactivate_host_parser = subparsers.add_parser('downhost', help='Deactivate an oVirt Host')
     deactivate_host_parser.set_defaults(which='downhost')
-    deactivate_host_parser.add_argument('hostname', help='oVirt Host\'s name')
+    deactivate_host_parser.add_argument('host_name', help='oVirt Host\'s name')
     # ------
     destroy_host_parser = subparsers.add_parser('delhost', help='Remove an oVirt Host')
     destroy_host_parser.set_defaults(which='delhost')
-    destroy_host_parser.add_argument('hostname', help='oVirt Host\'s name')
+    destroy_host_parser.add_argument('host_name', help='oVirt Host\'s name')
     # ------
     new_storage_domain_parser = subparsers.add_parser('nstdomain', help='Create an oVirt posixfs storage domain')
     new_storage_domain_parser.set_defaults(which='nstdomain')
@@ -381,18 +382,18 @@ def handle_args():
     new_storage_domain_parser.add_argument('storage_type', help='oVirt storage domain\'s storage type (ext4|ceph|...)')
     new_storage_domain_parser.add_argument('data_type', help='oVirt storage domain\'s data type (data|iso|export)')
     new_storage_domain_parser.add_argument('storagename', help='oVirt storage domain\'s name')
-    new_storage_domain_parser.add_argument('datacentername', help='oVirt storage domain\'s datacenter target')
-    new_storage_domain_parser.add_argument('hostname', help='oVirt storage domain\'s first hosting node')
+    new_storage_domain_parser.add_argument('data_center_name', help='oVirt storage domain\'s datacenter target')
+    new_storage_domain_parser.add_argument('host_name', help='oVirt storage domain\'s first hosting node')
     # ------
     lnk_storage_domain_parser = subparsers.add_parser('lnkstdomain', help='Attach an oVirt storage domain')
     lnk_storage_domain_parser.set_defaults(which='lnkstdomain')
     lnk_storage_domain_parser.add_argument('storagename', help='oVirt storage domain\'s name')
-    lnk_storage_domain_parser.add_argument('datacentername', help='oVirt storage domain data center\'s name')
+    lnk_storage_domain_parser.add_argument('data_center_name', help='oVirt storage domain data center\'s name')
     # ------
     unlnk_storage_domain_parser = subparsers.add_parser('unlnkstdomain', help='Unattach an oVirt storage domain')
     unlnk_storage_domain_parser.set_defaults(which='unlnkstdomain')
     unlnk_storage_domain_parser.add_argument('storagename', help='oVirt storage domain\'s name')
-    unlnk_storage_domain_parser.add_argument('datacentername', help='oVirt storage domain data center\'s name')
+    unlnk_storage_domain_parser.add_argument('data_center_name', help='oVirt storage domain data center\'s name')
     # ------
     up_storage_domain_parser = subparsers.add_parser('upstdomain', help='Attach an oVirt storage domain')
     up_storage_domain_parser.set_defaults(which='upstdomain')
@@ -408,7 +409,7 @@ def handle_args():
     # ------
     get_storage_domains_parser = subparsers.add_parser('getstdomain', help='Get info about an oVirt storage domain')
     get_storage_domains_parser.set_defaults(which='getstdomain')
-    get_storage_domains_parser.add_argument('datacentername', help='oVirt storage domain\'s datacenter target')
+    get_storage_domains_parser.add_argument('data_center_name', help='oVirt storage domain\'s datacenter target')
     # ------
     upload_iso_parser = subparsers.add_parser('uploadiso', help='Upload an iso to the oVirt right oVirt Host')
     upload_iso_parser.set_defaults(which='uploadiso')
@@ -417,27 +418,27 @@ def handle_args():
     # ------
     args = parser.parse_args()
     if args.which == "deldc":
-        destroy_datacenter(args.dataCenterName)
+        destroy_datacenter(args.data_center_name)
     elif args.which == "ndc":
-        create_datacenter(args.dataCenterName, args.storage_type)
+        create_datacenter(args.data_center_name, args.storage_type)
     elif args.which == "ncluster":
-        create_cluster(args.clustername, args.datacentername, args.cputype)
+        create_cluster(args.cluster_name, args.data_center_name, args.cpu_type)
     elif args.which == "delcluster":
-        destroy_cluster(args.clustername)
+        destroy_cluster(args.cluster_name)
     elif args.which == "nhost":
-        create_new_host_in_cluster(args.hostname, args.hostaddr, args.clustername, args.rootpwd)
+        create_new_host_in_cluster(args.host_name, args.host_addr, args.cluster_name, args.root_pwd)
     elif args.which == "delhost":
-        destroy_host(args.hostname)
+        destroy_host(args.host_name)
     elif args.which == "uphost":
-        set_host_active(args.hostname)
+        set_host_active(args.host_name)
     elif args.which == "downhost":
-        set_host_deactive(args.hostname)
+        set_host_deactive(args.host_name)
     elif args.which == "nstdomain":
-        create_posixfs_domain(args.storage_addr, args.storage_path, args.mnt_options, args.storage_type, args.data_type, args.storagename, args.datacentername, args.hostname)
+        create_posixfs_domain(args.storage_addr, args.storage_path, args.mnt_options, args.storage_type, args.data_type, args.storagename, args.data_center_name, args.host_name)
     elif args.which == "lnkstdomain":
-        link_storage_domain(args.storagename, args.datacentername)
+        link_storage_domain(args.storagename, args.data_center_name)
     elif args.which == "unlnkstdomain":
-        unlink_storage_domain(args.storagename, args.datacentername)
+        unlink_storage_domain(args.storagename, args.data_center_name)
     elif args.which == "upstdomain":
         up_storage_domain(args.storagename)
     elif args.which == "downstdomain":
@@ -445,7 +446,7 @@ def handle_args():
     elif args.which == "delstdomain":
         del_posix_storage_domain(args.storagename)
     elif args.which == "getstdomain":
-        get_storage_domains(args.datacentername)
+        get_storage_domains(args.data_center_name)
     elif args.which == "getrndhost":
         get_random_host_name()
     elif args.which == "uploadiso":
