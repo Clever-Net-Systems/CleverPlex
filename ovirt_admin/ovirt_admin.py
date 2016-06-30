@@ -295,7 +295,6 @@ def get_host_by_storage_domain_name(storagename):
     for host in hosts:
         host_cluster_id = host.get_cluster().get_id()
         if cluster_id == host_cluster_id:
-            print host.get_name()
             return host
 
 def get_mgmt_ip_by_hostname(hostname):
@@ -307,7 +306,6 @@ def get_mgmt_ip_by_hostname(hostname):
             netattach_net_id = netattach.network.id
             net_name = api.networks.get(id=netattach_net_id).get_name()
             if net_name == "ovirtmgmt":
-                print nic_ip
                 return nic_ip
 
 def get_mgmt_ip_by_storagename(storagename):
