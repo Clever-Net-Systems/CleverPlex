@@ -376,36 +376,36 @@ def handle_args():
     # ------
     new_storage_domain_parser = subparsers.add_parser('nstdomain', help='Create an oVirt posixfs storage domain')
     new_storage_domain_parser.set_defaults(which='nstdomain')
+    new_storage_domain_parser.add_argument('storage_name', help='oVirt storage domain\'s name')
     new_storage_domain_parser.add_argument('storage_addr', help='oVirt storage domain\'s name')
     new_storage_domain_parser.add_argument('storage_path', help='oVirt storage domain\'s name')
     new_storage_domain_parser.add_argument('mnt_options', help='oVirt storage domain\'s monting options')
     new_storage_domain_parser.add_argument('storage_type', help='oVirt storage domain\'s storage type (ext4|ceph|...)')
     new_storage_domain_parser.add_argument('data_type', help='oVirt storage domain\'s data type (data|iso|export)')
-    new_storage_domain_parser.add_argument('storagename', help='oVirt storage domain\'s name')
     new_storage_domain_parser.add_argument('data_center_name', help='oVirt storage domain\'s datacenter target')
     new_storage_domain_parser.add_argument('host_name', help='oVirt storage domain\'s first hosting node')
     # ------
     lnk_storage_domain_parser = subparsers.add_parser('lnkstdomain', help='Attach an oVirt storage domain')
     lnk_storage_domain_parser.set_defaults(which='lnkstdomain')
-    lnk_storage_domain_parser.add_argument('storagename', help='oVirt storage domain\'s name')
+    lnk_storage_domain_parser.add_argument('storage_name', help='oVirt storage domain\'s name')
     lnk_storage_domain_parser.add_argument('data_center_name', help='oVirt storage domain data center\'s name')
     # ------
     unlnk_storage_domain_parser = subparsers.add_parser('unlnkstdomain', help='Unattach an oVirt storage domain')
     unlnk_storage_domain_parser.set_defaults(which='unlnkstdomain')
-    unlnk_storage_domain_parser.add_argument('storagename', help='oVirt storage domain\'s name')
+    unlnk_storage_domain_parser.add_argument('storage_name', help='oVirt storage domain\'s name')
     unlnk_storage_domain_parser.add_argument('data_center_name', help='oVirt storage domain data center\'s name')
     # ------
     up_storage_domain_parser = subparsers.add_parser('upstdomain', help='Attach an oVirt storage domain')
     up_storage_domain_parser.set_defaults(which='upstdomain')
-    up_storage_domain_parser.add_argument('storagename', help='oVirt storage domain\'s name')
+    up_storage_domain_parser.add_argument('storage_name', help='oVirt storage domain\'s name')
     # ------
     down_storage_domain_parser = subparsers.add_parser('downstdomain', help='Detach an oVirt storage domain')
     down_storage_domain_parser.set_defaults(which='downstdomain')
-    down_storage_domain_parser.add_argument('storagename', help='oVirt storage domain\'s name')
+    down_storage_domain_parser.add_argument('storage_name', help='oVirt storage domain\'s name')
     # ------
     del_posix_storage_domain_parser = subparsers.add_parser('delstdomain', help='Remove an oVirt storage domain')
     del_posix_storage_domain_parser.set_defaults(which='delstdomain')
-    del_posix_storage_domain_parser.add_argument('storagename', help='oVirt storage domain\'s datacenter target')
+    del_posix_storage_domain_parser.add_argument('storage_name', help='oVirt storage domain\'s datacenter target')
     # ------
     get_storage_domains_parser = subparsers.add_parser('getstdomain', help='Get info about an oVirt storage domain')
     get_storage_domains_parser.set_defaults(which='getstdomain')
@@ -434,17 +434,17 @@ def handle_args():
     elif args.which == "downhost":
         set_host_deactive(args.host_name)
     elif args.which == "nstdomain":
-        create_posixfs_domain(args.storage_addr, args.storage_path, args.mnt_options, args.storage_type, args.data_type, args.storagename, args.data_center_name, args.host_name)
+        create_posixfs_domain(args.storage_addr, args.storage_path, args.mnt_options, args.storage_type, args.data_type, args.storage_name, args.data_center_name, args.host_name)
     elif args.which == "lnkstdomain":
-        link_storage_domain(args.storagename, args.data_center_name)
+        link_storage_domain(args.storage_name, args.data_center_name)
     elif args.which == "unlnkstdomain":
-        unlink_storage_domain(args.storagename, args.data_center_name)
+        unlink_storage_domain(args.storage_name, args.data_center_name)
     elif args.which == "upstdomain":
-        up_storage_domain(args.storagename)
+        up_storage_domain(args.storage_name)
     elif args.which == "downstdomain":
-        down_storage_domain(args.storagename)
+        down_storage_domain(args.storage_name)
     elif args.which == "delstdomain":
-        del_posix_storage_domain(args.storagename)
+        del_posix_storage_domain(args.storage_name)
     elif args.which == "getstdomain":
         get_storage_domains(args.data_center_name)
     elif args.which == "getrndhost":
